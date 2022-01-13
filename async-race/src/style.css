@@ -1,0 +1,8 @@
+.carSvg {
+  width: 320px;
+  height: 160px;
+}
+
+.carSvg .carBody {
+  fill: cyan;
+}
