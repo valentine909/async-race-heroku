@@ -1,0 +1,37 @@
+.garage {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.garage__control {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin: 15px 0;
+}
+
+.create__name, .update__name {
+  text-indent: 10px;
+  width: 230px;
+  height: 29px;
+}
+
+.create__color, .update__color {
+  height: 29px;
+}
+
+.create, .update, .race {
+  display: flex;
+  gap: 10px;
+}
+
+.race__generate {
+  width: 170px;
+}
+
+.garage__race-track {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
