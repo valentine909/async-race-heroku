@@ -3,13 +3,13 @@ import path from "./car_svg_path";
 import {createNSElement, setAttributes} from "../util/createElements";
 
 class Car {
-  private readonly car: SVGElement;
-  private readonly id: string;
+  private readonly carSVG: SVGElement;
+  private readonly id: number;
   private name: string;
-  constructor(color: string, name: string) {
+  constructor(color: string, name: string, id: number) {
     this.name = name;
-    this.id = Math.random().toString(36).replace('0.', '');
-    this.car = this.createCar();
+    this.id = id;
+    this.carSVG = this.createCar();
     this.changeColor(color);
   }
 
@@ -19,13 +19,13 @@ class Car {
       id: this.id,
       width: "1280.000000pt",
       height: "640.000000pt",
-      viewBox: "0 0 1280.000000 640.000000",
+      viewBox: "0 0 1280.000000 540.000000",
     }
     const gAttributes = {
       transform: "translate(0.000000,640.000000) scale(0.1000,-0.1000)",
       fill: "#000000",
       stroke: "black",
-      'stroke-width': "20",
+      'stroke-width': "50",
       'stroke-linecap': "square",
     }
     const svg = createNSElement("svg");
@@ -42,7 +42,7 @@ class Car {
   }
 
   changeColor(color: string) {
-    const path = this.car.querySelector('path') as SVGPathElement;
+    const path = this.carSVG.querySelector('path') as SVGPathElement;
     path.setAttribute('fill', color);
   }
 
@@ -51,11 +51,11 @@ class Car {
   }
 
   renderCar() {
-    return this.car;
+    return this.carSVG;
   }
 
   moveCar(offset: string) {
-    this.car.style.left = `${offset}%`;
+    this.carSVG.style.left = `${offset}%`;
   }
 }
 
