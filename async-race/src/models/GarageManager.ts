@@ -7,7 +7,7 @@ class GarageManager extends APIManager{
     this.endpoint += 'garage';
   }
 
-  async getCar(customId: number): Promise<CarProperties> {
+  async getCar(customId: number): Promise<void | CarProperties> {
     const endpointModifier = `?id=${customId}`;
     try {
       const res = await fetch(this.endpoint + endpointModifier, { method: "GET" });
@@ -15,11 +15,6 @@ class GarageManager extends APIManager{
       return json[0] as CarProperties;
     } catch (error) {
       console.log(error);
-      return {
-        color: '',
-        id: 0,
-        name: ''
-      }
     }
   }
 
@@ -35,12 +30,12 @@ class GarageManager extends APIManager{
       .catch(error => console.log(error));
   }
 
-  createCar(car: CarProperties): Promise<void> {
+  createCar(name: string, color: string): Promise<void> {
     const endpointModifier = '';
     return fetch(this.endpoint + endpointModifier, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({name: car.name, color: car.color})})
+      body: JSON.stringify({name: name, color: color})})
       .then(res => console.log(res.status, res.json()))
       .catch(error => console.log(error));
   }
@@ -54,12 +49,12 @@ class GarageManager extends APIManager{
       .catch(error => console.log(error));
   }
 
-  updateCar(car: CarProperties): Promise<void> {
-    const endpointModifier = `/${car.id}`;
+  updateCar(name: string, color: string, id: number): Promise<void> {
+    const endpointModifier = `/${id}`;
     return fetch(this.endpoint + endpointModifier, {
       method: "PUT",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({name: car.name, color: car.color})})
+      body: JSON.stringify({name: name, color: color})})
       .then(res => console.log(res.status, res.json()))
       .catch(error => console.log(error));
   }
