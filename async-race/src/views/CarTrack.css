@@ -1,0 +1,47 @@
+.track {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  border-bottom: dashed 2px white;
+  position: relative;
+}
+
+.start__button, .stop__button {
+  width: 29px;
+  border-radius: 5px;
+  background: transparent;
+  border: 2px solid darkred;
+}
+
+.track__car-container {
+  position: relative;
+  height: 54px;
+  width: 100%;
+}
+
+.track__first-line, .track__second-line {
+  display: flex;
+  gap: 10px;
+}
+
+.track__first-line {
+  align-items: center;
+}
+
+.track__car-name {
+  font-weight: bold;
+}
+
+.track__second-line {
+  align-items: flex-start;
+}
+
+.track__flag {
+  position: absolute;
+  bottom: 0;
+  right: 160px;
+  background: url("../public/assets/checkered-flag.svg") center no-repeat;
+  background-size: 50px 50px;
+  width: 50px;
+  height: 50px;
+}
