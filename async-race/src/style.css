@@ -43,6 +43,15 @@ header, footer {
 
 footer {
   margin-top: auto;
+  display: flex;
+  justify-content: center;
+}
+
+.footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  min-width: 500px;
 }
 
 .nav {
@@ -53,5 +62,21 @@ footer {
 #app {
   position: relative;
   overflow: auto;
-  height: calc(100vh - 98px);
+  height: calc(100vh - 80px);
+}
+.year::before {
+  content: '©';
+}
+
+.github {
+  padding-left: 15px;
+  background: url("./public/assets/github.svg") no-repeat left center;
+  background-size: 10px 10px;
+}
+
+.rs {
+  width: 27px;
+  height: 10px;
+  background: url("./public/assets/rss.svg") no-repeat center;
+  background-size: 27px 10px;
 }
