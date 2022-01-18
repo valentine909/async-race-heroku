@@ -10,6 +10,8 @@ body {
   height: 100vh;
   display: flex;
   flex-direction: column;
+  font-family: Arial, sans-serif;
+  font-size: 12px;
 }
 
 h1 {
@@ -27,9 +29,10 @@ a {
 
 button {
   cursor: pointer;
-  padding: 5px;
+  padding: 4px;
   width: 110px;
   text-transform: uppercase;
+  font: inherit;
   font-weight: bold;
   background: linear-gradient(yellow 35%, green 100%);
 }
