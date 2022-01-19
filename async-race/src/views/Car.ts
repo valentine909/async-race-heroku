@@ -57,6 +57,10 @@ class Car {
   moveCar(offset: string) {
     this.carSVG.style.left = `${offset}%`;
   }
+
+  resetCarPosition() {
+    this.carSVG.style.left = '0';
+  }
 }
 
 export default Car;
