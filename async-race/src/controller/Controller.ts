@@ -98,7 +98,7 @@ class Controller {
       if (ev.detail.id) {
         await this.model.deleteCar(ev.detail.id);
         this.currentGarageCarsCount -= 1;
-        if (this.currentGarageCarsCount / this.carsPerPage <= this.currentPage - 1) {
+        if (this.currentGarageCarsCount / this.carsPerPage <= this.currentPage - 1 && this.currentPage > 1) {
           this.currentPage -= 1;
         }
         await this.updateView();
