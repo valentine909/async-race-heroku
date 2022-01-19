@@ -80,3 +80,9 @@ footer {
   background: url("./public/assets/rss.svg") no-repeat center;
   background-size: 27px 10px;
 }
+
+.disabled {
+  pointer-events: none;
+  filter: grayscale(1);
+  cursor: auto;
+}
