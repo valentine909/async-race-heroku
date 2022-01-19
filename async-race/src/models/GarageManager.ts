@@ -30,13 +30,13 @@ class GarageManager extends APIManager{
       .catch(error => console.log(error));
   }
 
-  createCar(name: string, color: string): Promise<void> {
+  createCar(name: string, color: string): Promise<void | number> {
     const endpointModifier = '';
     return fetch(this.endpoint + endpointModifier, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({name: name, color: color})})
-      .then(res => console.log(res.status, res.json()))
+      .then(res => res.status)
       .catch(error => console.log(error));
   }
 
