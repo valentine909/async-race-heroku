@@ -2,7 +2,7 @@ import {createHTMLElement} from "../util/createElements";
 import {CarProperties} from "../types/types";
 import Car from "./Car";
 import './CarTrack.css';
-import {MyCustomEvent} from "../controller/CustomEvents";
+import {MyCustomEvent} from "../presenter/CustomEvents";
 
 class CarTrack {
   private readonly id: number;

@@ -1,5 +1,5 @@
 import {createHTMLElement} from "../util/createElements";
-import {MyCustomEvent} from "../controller/CustomEvents";
+import {MyCustomEvent} from "../presenter/CustomEvents";
 import './Pagination.css';
 
 class Pagination {

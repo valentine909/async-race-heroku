@@ -3,16 +3,19 @@ import Garage from "../views/Garage";
 import {Details, PageDetail} from "./CustomEvents";
 import {getRandomCarName, getRandomHexColor} from "../util/generateRandom";
 import {AllCars} from "../types/types";
+import RaceManager from "../models/RaceManager";
 
-class Controller {
-  private readonly model: GarageManager;
+class GaragePresenter {
+  private readonly garageModel: GarageManager;
+  private readonly raceModel: RaceManager;
   private readonly view: Garage;
   private readonly carsBatchSize: number;
   private currentGarageCarsCount: number;
   private currentPage: number;
   private carsPerPage: number;
-  constructor(garageManager: GarageManager, garage: Garage) {
-    this.model = garageManager;
+  constructor(garageManager: GarageManager, raceManager: RaceManager, garage: Garage) {
+    this.garageModel = garageManager;
+    this.raceModel = raceManager;
     this.view = garage;
     this.carsBatchSize = 100;
     this.carsPerPage = 0;
@@ -35,7 +38,7 @@ class Controller {
   }
 
   async updateView() {
-    const { cars, totalCars } = await this.model.getCars(this.currentPage, this.carsPerPage) as AllCars;
+    const { cars, totalCars } = await this.garageModel.getCars(this.currentPage, this.carsPerPage) as AllCars;
     this.currentGarageCarsCount = Number(totalCars);
     this.view.updatePage(this.currentGarageCarsCount.toString(), this.currentPage.toString(), await cars);
   }
@@ -44,7 +47,7 @@ class Controller {
     document.addEventListener('create-car', (async (ev: CustomEvent<Details>) => {
       if (ev.detail.name) {
         if (ev.detail.color) {
-          await this.model.createCar(ev.detail.name, ev.detail.color);
+          await this.garageModel.createCar(ev.detail.name, ev.detail.color);
           this.currentGarageCarsCount += 1;
           await this.updateView();
           this.updatePaginationButtonsStyle();
@@ -59,7 +62,7 @@ class Controller {
     document.addEventListener('update-car', (async (ev: CustomEvent<Details>) => {
       if (ev.detail.name) {
         if (ev.detail.color && ev.detail.id) {
-          await this.model.updateCar(ev.detail.name, ev.detail.color, ev.detail.id);
+          await this.garageModel.updateCar(ev.detail.name, ev.detail.color, ev.detail.id);
           await this.updateView();
         }
       } else {
@@ -72,7 +75,7 @@ class Controller {
     document.addEventListener('generate-cars', (async () => {
       const promises: Promise<void | number>[] = [];
       for (let i = 0; i < this.carsBatchSize; i += 1) {
-       promises.push(this.model.createCar(getRandomCarName(), getRandomHexColor()))
+       promises.push(this.garageModel.createCar(getRandomCarName(), getRandomHexColor()))
       }
       await Promise.allSettled(promises);
       this.currentGarageCarsCount += 100;
@@ -93,7 +96,7 @@ class Controller {
   deleteHandler() {
     document.addEventListener('delete-car', (async (ev: CustomEvent<Details>) => {
       if (ev.detail.id) {
-        await this.model.deleteCar(ev.detail.id);
+        await this.garageModel.deleteCar(ev.detail.id);
         this.currentGarageCarsCount -= 1;
         if (this.currentGarageCarsCount / this.carsPerPage <= this.currentPage - 1 && this.currentPage > 1) {
           this.currentPage -= 1;
@@ -133,4 +136,4 @@ class Controller {
   }
 }
 
-export default Controller;
+export default GaragePresenter;

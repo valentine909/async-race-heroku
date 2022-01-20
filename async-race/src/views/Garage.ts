@@ -2,7 +2,7 @@ import {createHTMLElement} from "../util/createElements";
 import './Garage.css';
 import {CarProperties} from "../types/types";
 import CarTrack from "./CarTrack";
-import {MyCustomEvent} from "../controller/CustomEvents";
+import {MyCustomEvent} from "../presenter/CustomEvents";
 import Pagination from "./Pagination";
 
 class Garage {
