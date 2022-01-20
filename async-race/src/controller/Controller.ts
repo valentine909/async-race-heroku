@@ -7,13 +7,11 @@ import {AllCars} from "../types/types";
 class Controller {
   private readonly model: GarageManager;
   private readonly view: Garage;
-  private readonly root: HTMLElement;
   private readonly carsBatchSize: number;
   private currentGarageCarsCount: number;
   private currentPage: number;
   private carsPerPage: number;
-  constructor(root: HTMLElement, garageManager: GarageManager, garage: Garage) {
-    this.root = root;
+  constructor(garageManager: GarageManager, garage: Garage) {
     this.model = garageManager;
     this.view = garage;
     this.carsBatchSize = 100;
@@ -34,7 +32,6 @@ class Controller {
     this.carsPerPage = this.view.getCarsPerPage();
     await this.updateView();
     this.updatePaginationButtonsStyle();
-    this.root.append(this.view.render());
   }
 
   async updateView() {

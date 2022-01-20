@@ -2,21 +2,17 @@ import './style.css';
 import Garage from "./views/Garage";
 import GarageManager from "./models/GarageManager";
 import Controller from "./controller/Controller";
+import Router from "./router/Router";
+import Winners from "./views/Winners";
 
 (async ()=> {
-  const root = document.querySelector('#app') as HTMLElement;
   const garageManager = new GarageManager();
   const garage = new Garage();
-  const controller = new Controller(root, garageManager, garage);
+  const winners = new Winners();
+  const controller = new Controller(garageManager, garage);
   await controller.init();
+  const router = new Router();
+  router.addPath('garage', garage.render());
+  router.addPath('winners', winners.render());
+  router.init('garage');
 })();
-
-// let offset = 0;
-// const move = setInterval(() => {
-//   if (offset < 100) {
-//     offset += 0.25;
-//     car.moveCar(`${offset}`);
-//   } else {
-//     clearInterval(move);
-//   }
-// }, 25)

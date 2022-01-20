@@ -47,7 +47,7 @@ export enum SortVariants {
   time = 'time',
 }
 
-export type Rout = {
+export type Route = {
   path: string;
   content: HTMLElement;
 };
