@@ -50,7 +50,7 @@ export function getRandomCarName() {
     'Chevrolet',
     'Mazzanti',
     'Daewoo',
-  ]
+  ];
   const model = [
     'Roadster',
     'S',
@@ -102,8 +102,8 @@ export function getRandomCarName() {
     '911',
     'Cayenne',
     'FX37',
-  ]
-  return `${manufacturer[manufacturer.length * Math.random() | 0]} ${model[model.length * Math.random() | 0]}`
+  ];
+  return `${manufacturer[Math.floor(manufacturer.length * Math.random())]} ${model[Math.floor(model.length * Math.random())]}`;
 }
 
 export function getRandomHexColor() {

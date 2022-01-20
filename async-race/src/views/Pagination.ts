@@ -1,11 +1,14 @@
-import {createHTMLElement} from "../util/createElements";
-import {MyCustomEvent} from "../presenter/CustomEvents";
+import { createHTMLElement } from '../util/createElements';
+import { MyCustomEvent } from '../presenter/CustomEvents';
 import './Pagination.css';
 
 class Pagination {
   private readonly prevButton: HTMLElement;
+
   private readonly nextButton: HTMLElement;
+
   private readonly pageName: string;
+
   constructor(pageName: string) {
     this.pageName = pageName;
     this.prevButton = this.getPrevButton();
@@ -23,8 +26,8 @@ class Pagination {
     prevButton.addEventListener('click', () => {
       prevButton.dispatchEvent(MyCustomEvent(`${this.pageName}-pagination`, {
         currentPage: -1,
-      }))
-    })
+      }));
+    });
     return prevButton;
   }
 
@@ -33,8 +36,8 @@ class Pagination {
     nextButton.addEventListener('click', () => {
       nextButton.dispatchEvent(MyCustomEvent(`${this.pageName}-pagination`, {
         currentPage: +1,
-      }))
-    })
+      }));
+    });
     return nextButton;
   }
 

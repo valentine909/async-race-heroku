@@ -1,7 +1,8 @@
-import {createHTMLElement} from "../util/createElements";
+import { createHTMLElement } from '../util/createElements';
 
 class Default404 {
   private readonly error: HTMLElement;
+
   constructor() {
     this.error = createHTMLElement('div', 'error', 'No such page found');
   }

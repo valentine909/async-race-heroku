@@ -1,14 +1,14 @@
 import './style.css';
-import Garage from "./views/Garage";
-import GarageManager from "./models/GarageManager";
-import GaragePresenter from "./presenter/GaragePresenter";
-import Router from "./router/Router";
-import Winners from "./views/Winners";
-import WinnerPresenter from "./presenter/WinnerPresenter";
-import RaceManager from "./models/RaceManager";
-import WinnerManager from "./models/WinnerManager";
+import Garage from './views/Garage';
+import GarageManager from './models/GarageManager';
+import GaragePresenter from './presenter/GaragePresenter';
+import Router from './router/Router';
+import Winners from './views/Winners';
+import WinnerPresenter from './presenter/WinnerPresenter';
+import RaceManager from './models/RaceManager';
+import WinnerManager from './models/WinnerManager';
 
-(async ()=> {
+(async () => {
   const garageManager = new GarageManager();
   const raceManager = new RaceManager();
   const winnerManager = new WinnerManager();

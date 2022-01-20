@@ -1,15 +1,20 @@
-import {createHTMLElement} from "../util/createElements";
-import {CarProperties} from "../types/types";
-import Car from "./Car";
+import { createHTMLElement } from '../util/createElements';
+import { CarProperties } from '../types/types';
+import Car from './Car';
 import './CarTrack.css';
-import {MyCustomEvent} from "../presenter/CustomEvents";
+import { MyCustomEvent } from '../presenter/CustomEvents';
 
 class CarTrack {
   private readonly id: number;
+
   private readonly name: string;
+
   private readonly track: HTMLElement;
+
   private readonly car: Car;
+
   private readonly color: string;
+
   constructor(car: CarProperties) {
     this.id = car.id as number;
     this.name = car.name;
@@ -33,14 +38,14 @@ class CarTrack {
         name: this.name,
         color: this.color,
         id: this.id,
-      }))
-    })
+      }));
+    });
     const removeButton = createHTMLElement('button', 'remove__button', 'remove');
     removeButton.addEventListener('click', () => {
       removeButton.dispatchEvent(MyCustomEvent('delete-car', {
         id: this.id,
-      }))
-    })
+      }));
+    });
     const carName = createHTMLElement('div', 'track__car-name', this.name);
     firstLine.append(selectButton, removeButton, carName);
     return firstLine;
@@ -49,23 +54,24 @@ class CarTrack {
   getSecondLine() {
     const secondLine = createHTMLElement('div', 'track__second-line');
     const startEngineButton = createHTMLElement('button', 'start__button', 'A');
+    const stopEngineButton = createHTMLElement('button', 'stop__button disabled', 'B');
     startEngineButton.addEventListener('click', () => {
       startEngineButton.dispatchEvent(MyCustomEvent('start-engine', {
         id: this.id,
-      }))
+      }));
       startEngineButton.classList.add('disabled');
       stopEngineButton.classList.remove('disabled');
-    })
-    const stopEngineButton = createHTMLElement('button', 'stop__button disabled', 'B');
+    });
+
     stopEngineButton.addEventListener('click', () => {
       stopEngineButton.dispatchEvent(MyCustomEvent('stop-engine', {
         id: this.id,
-      }))
+      }));
       startEngineButton.classList.remove('disabled');
       stopEngineButton.classList.add('disabled');
-    })
+    });
     const carContainer = createHTMLElement('div', 'track__car-container');
-    carContainer.append(this.car.renderCar())
+    carContainer.append(this.car.renderCar());
     secondLine.append(startEngineButton, stopEngineButton, carContainer);
     return secondLine;
   }

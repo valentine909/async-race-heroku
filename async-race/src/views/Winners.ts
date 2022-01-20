@@ -1,14 +1,15 @@
-import {createHTMLElement} from "../util/createElements";
+import { createHTMLElement } from '../util/createElements';
 
 class Winners {
+  private readonly page: HTMLElement;
+
   constructor() {
-    //
+    this.page = createHTMLElement('div', 'stub', 'Winner\'s Page');
   }
 
   render() {
-    return createHTMLElement('div', 'stub', 'Winner\'s Page');
+    return this.page;
   }
-
 }
 
 export default Winners;

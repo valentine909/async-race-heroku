@@ -8,9 +8,9 @@ export interface PageDetail {
   currentPage: number;
 }
 
-export type detail = Details | PageDetail;
+export type Detail = Details | PageDetail;
 
-export function MyCustomEvent(name: string, details?: detail): CustomEvent<detail> {
+export function MyCustomEvent(name: string, details?: Detail): CustomEvent<Detail> {
   return new CustomEvent(name, {
     bubbles: true,
     cancelable: true,

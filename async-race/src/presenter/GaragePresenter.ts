@@ -1,18 +1,25 @@
-import GarageManager from "../models/GarageManager";
-import Garage from "../views/Garage";
-import {Details, PageDetail} from "./CustomEvents";
-import {getRandomCarName, getRandomHexColor} from "../util/generateRandom";
-import {AllCars, EngineStatus} from "../types/types";
-import RaceManager from "../models/RaceManager";
+import GarageManager from '../models/GarageManager';
+import Garage from '../views/Garage';
+import { Details, PageDetail } from './CustomEvents';
+import { getRandomCarName, getRandomHexColor } from '../util/generateRandom';
+import { AllCars, EngineStatus } from '../types/types';
+import RaceManager from '../models/RaceManager';
 
 class GaragePresenter {
   private readonly garageModel: GarageManager;
+
   private readonly raceModel: RaceManager;
+
   private readonly view: Garage;
+
   private readonly carsBatchSize: number;
+
   private currentGarageCarsCount: number;
+
   private currentPage: number;
+
   private carsPerPage: number;
+
   constructor(garageManager: GarageManager, raceManager: RaceManager, garage: Garage) {
     this.garageModel = garageManager;
     this.raceModel = raceManager;
@@ -40,12 +47,19 @@ class GaragePresenter {
   }
 
   async updateView() {
-    const { cars, totalCars } = await this.garageModel.getCars(this.currentPage, this.carsPerPage) as AllCars;
+    const { cars, totalCars } = await this.garageModel.getCars(
+      this.currentPage,
+      this.carsPerPage,
+    ) as AllCars;
     this.currentGarageCarsCount = Number(totalCars);
-    this.view.updatePage(this.currentGarageCarsCount.toString(), this.currentPage.toString(), await cars);
+    this.view.updatePage(
+      this.currentGarageCarsCount.toString(),
+      this.currentPage.toString(),
+      await cars,
+    );
   }
 
-   createHandler() {
+  createHandler() {
     document.addEventListener('create-car', (async (ev: CustomEvent<Details>) => {
       if (ev.detail.name) {
         if (ev.detail.color) {
@@ -55,9 +69,10 @@ class GaragePresenter {
           this.updatePaginationButtonsStyle();
         }
       } else {
-        alert('Car\'s name could not be empty!')
+        // eslint-disable-next-line no-alert
+        alert('Car\'s name could not be empty!');
       }
-    }) as unknown as EventListener)
+    }) as unknown as EventListener);
   }
 
   updateHandler() {
@@ -68,22 +83,23 @@ class GaragePresenter {
           await this.updateView();
         }
       } else {
-        alert('Car\'s name could not be empty!')
+        // eslint-disable-next-line no-alert
+        alert('Car\'s name could not be empty!');
       }
-    }) as unknown as EventListener)
+    }) as unknown as EventListener);
   }
 
   generateCarsHandler() {
     document.addEventListener('generate-cars', (async () => {
       const promises: Promise<void | number>[] = [];
       for (let i = 0; i < this.carsBatchSize; i += 1) {
-       promises.push(this.garageModel.createCar(getRandomCarName(), getRandomHexColor()))
+        promises.push(this.garageModel.createCar(getRandomCarName(), getRandomHexColor()));
       }
       await Promise.allSettled(promises);
       this.currentGarageCarsCount += 100;
       await this.updateView();
       this.updatePaginationButtonsStyle();
-    }))
+    }));
   }
 
   selectHandler() {
@@ -92,7 +108,7 @@ class GaragePresenter {
         this.view.setUpdateId(ev.detail.id);
         this.view.updateUpdateBlock(ev.detail.name, ev.detail.color);
       }
-    }) as unknown as EventListener)
+    }) as unknown as EventListener);
   }
 
   deleteHandler() {
@@ -100,18 +116,20 @@ class GaragePresenter {
       if (ev.detail.id) {
         await this.garageModel.deleteCar(ev.detail.id);
         this.currentGarageCarsCount -= 1;
-        if (this.currentGarageCarsCount / this.carsPerPage <= this.currentPage - 1 && this.currentPage > 1) {
+        if (this.currentGarageCarsCount / this.carsPerPage <= this.currentPage - 1
+          && this.currentPage > 1) {
           this.currentPage -= 1;
         }
         await this.updateView();
         this.updatePaginationButtonsStyle();
       }
-    }) as unknown as EventListener)
+    }) as unknown as EventListener);
   }
 
   paginationHandler() {
     document.addEventListener('garage-pagination', (async (ev: CustomEvent<PageDetail>) => {
-      if (ev.detail.currentPage > 0 && this.currentGarageCarsCount / this.carsPerPage > this.currentPage) {
+      if (ev.detail.currentPage > 0
+        && this.currentGarageCarsCount / this.carsPerPage > this.currentPage) {
         this.currentPage += 1;
         await this.updateView();
       }
@@ -120,7 +138,7 @@ class GaragePresenter {
         await this.updateView();
       }
       this.updatePaginationButtonsStyle();
-    }) as unknown as EventListener)
+    }) as unknown as EventListener);
   }
 
   updatePaginationButtonsStyle() {
@@ -139,28 +157,27 @@ class GaragePresenter {
 
   startEngineHandler() {
     document.addEventListener('start-engine', (async (ev: CustomEvent<Details>) => {
-      const id = ev.detail.id;
+      const { id } = ev.detail;
       if (id) {
         const raceProperties = await this.raceModel.startOrStop(id, EngineStatus.started);
         const timeToTravel = raceProperties.distance / raceProperties.velocity;
-        console.log(id, timeToTravel);
         this.view.startCar(id, timeToTravel);
         const isOK = await this.raceModel.drive(id);
         if (!isOK) {
           this.view.stopCar(id);
         }
       }
-    }) as unknown as EventListener)
+    }) as unknown as EventListener);
   }
 
   stopEngineHandler() {
     document.addEventListener('stop-engine', (async (ev: CustomEvent<Details>) => {
-      const id = ev.detail.id;
+      const { id } = ev.detail;
       if (id) {
         await this.raceModel.startOrStop(id, EngineStatus.stopped);
         this.view.resetCar(id);
       }
-    }) as unknown as EventListener)
+    }) as unknown as EventListener);
   }
 }
 

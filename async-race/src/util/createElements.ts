@@ -10,11 +10,11 @@ export function createHTMLElement(tag = '', className = '', text = ''): HTMLElem
 }
 
 export function createNSElement(name: string): SVGElement {
-  return document.createElementNS("http://www.w3.org/2000/svg", name);
+  return document.createElementNS('http://www.w3.org/2000/svg', name);
 }
 
 export function setAttributes(element: HTMLElement | SVGElement, attributes: object) {
-  for (const [key, value] of Object.entries(attributes)) {
-    element.setAttribute(key, value);
-  }
+  Object.entries(attributes).forEach((keyValuePair) => {
+    element.setAttribute(keyValuePair[0], keyValuePair[1]);
+  });
 }

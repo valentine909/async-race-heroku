@@ -1,30 +1,45 @@
-import {createHTMLElement} from "../util/createElements";
+import { createHTMLElement } from '../util/createElements';
 import './Garage.css';
-import {CarProperties} from "../types/types";
-import CarTrack from "./CarTrack";
-import {MyCustomEvent} from "../presenter/CustomEvents";
-import Pagination from "./Pagination";
+import { CarProperties } from '../types/types';
+import CarTrack from './CarTrack';
+import { MyCustomEvent } from '../presenter/CustomEvents';
+import Pagination from './Pagination';
 
 class Garage {
   private readonly garage: HTMLElement;
+
   private readonly carsNumber: HTMLElement;
+
   private readonly pageNumber: HTMLElement;
+
   private readonly raceTrack: HTMLElement;
+
   private updateId: number;
+
   private readonly updateBlock: HTMLElement;
+
   private readonly carsPerPage: number;
+
   private readonly pagination: Pagination;
+
   private tracks: CarTrack[];
+
   constructor() {
     this.carsPerPage = 7;
     this.garage = createHTMLElement('div', 'garage');
     this.updateId = -1;
     this.updateBlock = this.getUpdateBlock();
     this.pagination = new Pagination('garage');
-    this.carsNumber =  createHTMLElement('h2', 'garage__counter', 'Garage (0)');
+    this.carsNumber = createHTMLElement('h2', 'garage__counter', 'Garage (0)');
     this.pageNumber = createHTMLElement('h3', 'garage__page-number', `Page #${1}`);
     this.raceTrack = createHTMLElement('div', 'garage__race-track');
-    this.garage.append(this.getGarageControl(), this.carsNumber, this.pageNumber, this.raceTrack, this.pagination.render());
+    this.garage.append(
+      this.getGarageControl(),
+      this.carsNumber,
+      this.pageNumber,
+      this.raceTrack,
+      this.pagination.render(),
+    );
     this.tracks = [] as CarTrack[];
   }
 
@@ -51,20 +66,20 @@ class Garage {
         color: createColor.value,
       }));
       createInput.value = '';
-      createColor.value = '#000000'
-    })
+      createColor.value = '#000000';
+    });
     createContainer.append(createInput, createColor, createButton);
     return createContainer;
   }
 
   getUpdateBlock() {
-    const updateContainer =  createHTMLElement('div', 'update disabled');
-    const  updateInput =  createHTMLElement('input', ' update__name') as HTMLInputElement;
+    const updateContainer = createHTMLElement('div', 'update disabled');
+    const updateInput = createHTMLElement('input', ' update__name') as HTMLInputElement;
     updateInput.setAttribute('type', 'text');
     updateInput.setAttribute('placeholder', 'Enter car name...');
-    const  updateColor =  createHTMLElement('input', ' update__color') as HTMLInputElement;
+    const updateColor = createHTMLElement('input', ' update__color') as HTMLInputElement;
     updateColor.setAttribute('type', 'color');
-    const  updateButton =  createHTMLElement('button', ' update__button', 'update');
+    const updateButton = createHTMLElement('button', ' update__button', 'update');
     updateButton.addEventListener('click', () => {
       updateButton.dispatchEvent(MyCustomEvent('update-car', {
         name: updateInput.value,
@@ -74,11 +89,12 @@ class Garage {
       updateInput.value = '';
       updateColor.value = '#000000';
       this.updateBlock.classList.add('disabled');
-    })
-    updateContainer.append(updateInput,  updateColor,  updateButton);
+    });
+    updateContainer.append(updateInput, updateColor, updateButton);
     return updateContainer;
   }
 
+  // eslint-disable-next-line class-methods-use-this
   getRaceBlock() {
     const raceContainer = createHTMLElement('div', 'race');
     const raceButton = createHTMLElement('button', 'race__race', 'race');
@@ -87,7 +103,7 @@ class Garage {
     const generateButton = createHTMLElement('button', 'race__generate', 'generate cars');
     generateButton.addEventListener('click', () => {
       generateButton.dispatchEvent(MyCustomEvent('generate-cars'));
-    })
+    });
 
     raceContainer.append(raceButton, resetButton, generateButton);
     return raceContainer;
@@ -112,21 +128,21 @@ class Garage {
   }
 
   updateCarsNumber(num: string) {
-    this.carsNumber.innerHTML = `Garage (${num})`
+    this.carsNumber.innerHTML = `Garage (${num})`;
   }
 
   updatePageNumber(num: string) {
-    this.pageNumber.innerHTML = `Page #${num}`
+    this.pageNumber.innerHTML = `Page #${num}`;
   }
 
   updateRaceTrack(cars: CarProperties[]) {
     this.raceTrack.innerHTML = '';
     this.tracks = [];
-    cars.forEach(car => {
+    cars.forEach((car) => {
       const carObj = new CarTrack(car);
       this.tracks.push(carObj);
       this.raceTrack.append(carObj.render());
-    })
+    });
   }
 
   startCar(id: number, time: number) {
@@ -151,10 +167,11 @@ class Garage {
   }
 
   findCar(id: number) {
-    const properTrack = this.tracks.find(track => track.getCar().id === id);
+    const properTrack = this.tracks.find((track) => track.getCar().id === id);
     if (properTrack) {
       return properTrack.getCar();
     }
+    return undefined;
   }
 
   updatePage(carsNumber: string, pageNumber: string, cars: CarProperties[]) {
