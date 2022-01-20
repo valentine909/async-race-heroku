@@ -14,6 +14,7 @@ class Garage {
   private readonly updateBlock: HTMLElement;
   private readonly carsPerPage: number;
   private readonly pagination: Pagination;
+  private tracks: CarTrack[];
   constructor() {
     this.carsPerPage = 7;
     this.garage = createHTMLElement('div', 'garage');
@@ -24,6 +25,7 @@ class Garage {
     this.pageNumber = createHTMLElement('h3', 'garage__page-number', `Page #${1}`);
     this.raceTrack = createHTMLElement('div', 'garage__race-track');
     this.garage.append(this.getGarageControl(), this.carsNumber, this.pageNumber, this.raceTrack, this.pagination.render());
+    this.tracks = [] as CarTrack[];
   }
 
   getGarageControl() {
@@ -119,9 +121,40 @@ class Garage {
 
   updateRaceTrack(cars: CarProperties[]) {
     this.raceTrack.innerHTML = '';
+    this.tracks = [];
     cars.forEach(car => {
-      this.raceTrack.append(new CarTrack(car).render());
+      const carObj = new CarTrack(car);
+      this.tracks.push(carObj);
+      this.raceTrack.append(carObj.render());
     })
+  }
+
+  startCar(id: number, time: number) {
+    const car = this.findCar(id);
+    if (car) {
+      car.move(time);
+    }
+  }
+
+  stopCar(id: number) {
+    const car = this.findCar(id);
+    if (car) {
+      car.stop();
+    }
+  }
+
+  resetCar(id: number) {
+    const car = this.findCar(id);
+    if (car) {
+      car.reset();
+    }
+  }
+
+  findCar(id: number) {
+    const properTrack = this.tracks.find(track => track.getCar().id === id);
+    if (properTrack) {
+      return properTrack.getCar();
+    }
   }
 
   updatePage(carsNumber: string, pageNumber: string, cars: CarProperties[]) {

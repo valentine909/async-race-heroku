@@ -2,7 +2,7 @@ import GarageManager from "../models/GarageManager";
 import Garage from "../views/Garage";
 import {Details, PageDetail} from "./CustomEvents";
 import {getRandomCarName, getRandomHexColor} from "../util/generateRandom";
-import {AllCars} from "../types/types";
+import {AllCars, EngineStatus} from "../types/types";
 import RaceManager from "../models/RaceManager";
 
 class GaragePresenter {
@@ -29,6 +29,8 @@ class GaragePresenter {
     this.selectHandler();
     this.deleteHandler();
     this.paginationHandler();
+    this.startEngineHandler();
+    this.stopEngineHandler();
   }
 
   async init() {
@@ -133,6 +135,32 @@ class GaragePresenter {
     } else {
       this.view.disableNextButton(true);
     }
+  }
+
+  startEngineHandler() {
+    document.addEventListener('start-engine', (async (ev: CustomEvent<Details>) => {
+      const id = ev.detail.id;
+      if (id) {
+        const raceProperties = await this.raceModel.startOrStop(id, EngineStatus.started);
+        const timeToTravel = raceProperties.distance / raceProperties.velocity;
+        console.log(id, timeToTravel);
+        this.view.startCar(id, timeToTravel);
+        const isOK = await this.raceModel.drive(id);
+        if (!isOK) {
+          this.view.stopCar(id);
+        }
+      }
+    }) as unknown as EventListener)
+  }
+
+  stopEngineHandler() {
+    document.addEventListener('stop-engine', (async (ev: CustomEvent<Details>) => {
+      const id = ev.detail.id;
+      if (id) {
+        await this.raceModel.startOrStop(id, EngineStatus.stopped);
+        this.view.resetCar(id);
+      }
+    }) as unknown as EventListener)
   }
 }
 

@@ -4,13 +4,17 @@ import {createNSElement, setAttributes} from "../util/createElements";
 
 class Car {
   private readonly carSVG: SVGElement;
-  private readonly id: number;
+  readonly id: number;
   private name: string;
+  private color: string;
+  private animation: Animation;
   constructor(color: string, name: string, id: number) {
     this.name = name;
     this.id = id;
+    this.color = color;
     this.carSVG = this.createCar();
     this.changeColor(color);
+    this.animation = undefined as unknown as Animation;
   }
 
   private createCar() {
@@ -46,20 +50,22 @@ class Car {
     path.setAttribute('fill', color);
   }
 
-  changeName(name: string) {
-    this.name = name;
-  }
-
   renderCar() {
     return this.carSVG;
   }
 
-  moveCar(offset: string) {
-    this.carSVG.style.left = `${offset}%`;
+  move(velocity: number) {
+    this.animation = this.carSVG.animate([
+      {left: '0' },
+      {left: 'calc(100% - 160px' }], {duration: velocity, fill: "forwards"})
   }
 
-  resetCarPosition() {
-    this.carSVG.style.left = '0';
+  stop() {
+    this.animation.pause();
+  }
+
+  reset() {
+    this.animation.cancel();
   }
 }
 

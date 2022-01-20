@@ -11,7 +11,6 @@ class RaceManager extends APIManager {
     const endpointModifier = `?id=${customId}&status=${status}`;
     return fetch(this.endpoint + endpointModifier, {method: 'PATCH'})
       .then(res => res.json())
-      .then(data => data[0])
       .catch(error => console.log(error));
   }
 

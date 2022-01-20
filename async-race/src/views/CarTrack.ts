@@ -8,27 +8,31 @@ class CarTrack {
   private readonly id: number;
   private readonly name: string;
   private readonly track: HTMLElement;
+  private readonly car: Car;
+  private readonly color: string;
   constructor(car: CarProperties) {
     this.id = car.id as number;
     this.name = car.name;
-    this.track = this.createTrack(car.color, this.id, this.name);
+    this.color = car.color;
+    this.car = new Car(this.color, this.name, this.id);
+    this.track = this.createTrack();
   }
 
-  createTrack(color: string, id: number, name: string) {
+  createTrack() {
     const track = createHTMLElement('div', 'track');
     const flagContainer = createHTMLElement('div', 'track__flag');
-    track.append(this.getFirstLine(color, id, name), this.getSecondLine(color, id, name), flagContainer);
+    track.append(this.getFirstLine(), this.getSecondLine(), flagContainer);
     return track;
   }
 
-  getFirstLine(color: string, id: number, name: string) {
+  getFirstLine() {
     const firstLine = createHTMLElement('div', 'track__first-line');
     const selectButton = createHTMLElement('button', 'select__button', 'select');
     selectButton.addEventListener('click', () => {
       selectButton.dispatchEvent(MyCustomEvent('select-car', {
-        name: name,
-        color: color,
-        id: id,
+        name: this.name,
+        color: this.color,
+        id: this.id,
       }))
     })
     const removeButton = createHTMLElement('button', 'remove__button', 'remove');
@@ -37,12 +41,12 @@ class CarTrack {
         id: this.id,
       }))
     })
-    const carName = createHTMLElement('div', 'track__car-name', name);
+    const carName = createHTMLElement('div', 'track__car-name', this.name);
     firstLine.append(selectButton, removeButton, carName);
     return firstLine;
   }
 
-  getSecondLine(color: string, id: number, name: string) {
+  getSecondLine() {
     const secondLine = createHTMLElement('div', 'track__second-line');
     const startEngineButton = createHTMLElement('button', 'start__button', 'A');
     startEngineButton.addEventListener('click', () => {
@@ -61,10 +65,13 @@ class CarTrack {
       stopEngineButton.classList.add('disabled');
     })
     const carContainer = createHTMLElement('div', 'track__car-container');
-    const innerCar = new Car(color, name, id);
-    carContainer.append(innerCar.renderCar())
+    carContainer.append(this.car.renderCar())
     secondLine.append(startEngineButton, stopEngineButton, carContainer);
     return secondLine;
+  }
+
+  getCar() {
+    return this.car;
   }
 
   render() {
