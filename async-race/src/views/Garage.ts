@@ -159,7 +159,14 @@ class Garage {
   }
 
   startCars() {
-    this.tracks.forEach((track) => track.getStartButton().dispatchEvent(new Event('click')));
+    this.tracks.forEach((track) => {
+      track.getStartButton().dispatchEvent(new Event('click'));
+      track.getCar().renderCar().addEventListener('animationend', () => {
+        track.getCar().renderCar().dispatchEvent(MyCustomEvent('winner', {
+          id: track.getCar().getId(),
+        }));
+      }, { once: true });
+    });
   }
 
   stopCar(id: number) {
@@ -204,6 +211,10 @@ class Garage {
 
   render() {
     return this.garage;
+  }
+
+  toggleBlockUI() {
+    this.garage.classList.toggle('disabled');
   }
 }
 

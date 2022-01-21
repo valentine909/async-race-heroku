@@ -76,6 +76,10 @@ class Car {
       this.animation.cancel();
     }
   }
+
+  getId() {
+    return this.id;
+  }
 }
 
 export default Car;

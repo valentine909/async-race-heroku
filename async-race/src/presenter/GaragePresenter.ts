@@ -183,6 +183,7 @@ class GaragePresenter {
   startRaceHandler() {
     document.addEventListener('start-race', (async () => {
       this.view.startCars();
+      this.view.toggleBlockUI();
     }) as unknown as EventListener);
   }
 
