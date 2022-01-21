@@ -4,6 +4,7 @@ import { CarProperties } from '../types/types';
 import CarTrack from './CarTrack';
 import { MyCustomEvent } from '../presenter/CustomEvents';
 import Pagination from './Pagination';
+import Modal from './Modal';
 
 class Garage {
   private readonly garage: HTMLElement;
@@ -24,23 +25,29 @@ class Garage {
 
   private tracks: CarTrack[];
 
+  private readonly garageControl: HTMLElement;
+
+  private readonly modal: Modal;
+
   constructor() {
     this.carsPerPage = 7;
     this.garage = createHTMLElement('div', 'garage');
     this.updateId = -1;
     this.updateBlock = this.getUpdateBlock();
+    this.garageControl = this.getGarageControl();
     this.pagination = new Pagination('garage');
     this.carsNumber = createHTMLElement('h2', 'garage__counter', 'Garage (0)');
     this.pageNumber = createHTMLElement('h3', 'garage__page-number', `Page #${1}`);
     this.raceTrack = createHTMLElement('div', 'garage__race-track');
     this.garage.append(
-      this.getGarageControl(),
+      this.garageControl,
       this.carsNumber,
       this.pageNumber,
       this.raceTrack,
       this.pagination.render(),
     );
     this.tracks = [] as CarTrack[];
+    this.modal = new Modal(this.garage);
   }
 
   getGarageControl() {
@@ -159,14 +166,7 @@ class Garage {
   }
 
   startCars() {
-    this.tracks.forEach((track) => {
-      track.getStartButton().dispatchEvent(new Event('click'));
-      track.getCar().renderCar().addEventListener('animationend', () => {
-        track.getCar().renderCar().dispatchEvent(MyCustomEvent('winner', {
-          id: track.getCar().getId(),
-        }));
-      }, { once: true });
-    });
+    this.tracks.forEach((track) => track.getStartButton().dispatchEvent(new Event('click')));
   }
 
   stopCar(id: number) {
@@ -214,7 +214,17 @@ class Garage {
   }
 
   toggleBlockUI() {
-    this.garage.classList.toggle('disabled');
+    this.garageControl.classList.toggle('disabled');
+    this.pagination.render().classList.toggle('disabled');
+  }
+
+  clearOtherWinners() {
+    this.tracks.forEach((track) => track.getCar().removeEventListener());
+  }
+
+  popupModal(winner: string) {
+    this.modal.setText(winner);
+    this.modal.show();
   }
 }
 

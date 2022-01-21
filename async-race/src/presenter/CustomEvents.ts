@@ -8,7 +8,12 @@ export interface PageDetail {
   currentPage: number;
 }
 
-export type Detail = Details | PageDetail;
+export interface WinnerDetail {
+  id: number;
+  time: number;
+}
+
+export type Detail = Details | PageDetail | WinnerDetail;
 
 export function MyCustomEvent(name: string, details?: Detail): CustomEvent<Detail> {
   return new CustomEvent(name, {

@@ -18,7 +18,7 @@ import WinnerManager from './models/WinnerManager';
 
   const garagePresenter = new GaragePresenter(garageManager, raceManager, garage);
   await garagePresenter.init();
-  const winnerPresenter = new WinnerPresenter(winnerManager, winners);
+  const winnerPresenter = new WinnerPresenter(garageManager, winnerManager, garage, winners);
   await winnerPresenter.init();
 
   const router = new Router();

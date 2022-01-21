@@ -174,7 +174,7 @@ class GaragePresenter {
     document.addEventListener('stop-engine', (async (ev: CustomEvent<Details>) => {
       const { id } = ev.detail;
       if (id) {
-        await this.raceModel.startOrStop(id, EngineStatus.stopped);
+        this.raceModel.startOrStop(id, EngineStatus.stopped).then((r) => r.velocity);
         this.view.resetCar(id);
       }
     }) as unknown as EventListener);
@@ -182,6 +182,7 @@ class GaragePresenter {
 
   startRaceHandler() {
     document.addEventListener('start-race', (async () => {
+      await this.view.resetCars();
       this.view.startCars();
       this.view.toggleBlockUI();
     }) as unknown as EventListener);
@@ -189,7 +190,7 @@ class GaragePresenter {
 
   resetCarsHandler() {
     document.addEventListener('reset-cars', (async () => {
-      this.view.resetCars();
+      await this.view.resetCars();
     }) as unknown as EventListener);
   }
 }

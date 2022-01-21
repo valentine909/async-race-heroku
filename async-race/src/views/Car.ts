@@ -1,6 +1,7 @@
 import './Car.css';
 import path from './car_svg_path';
 import { createNSElement, setAttributes } from '../util/createElements';
+import { MyCustomEvent } from '../presenter/CustomEvents';
 
 class Car {
   private readonly carSVG: SVGElement;
@@ -13,6 +14,8 @@ class Car {
 
   private animation: Animation;
 
+  private listener: EventListener;
+
   constructor(color: string, name: string, id: number) {
     this.name = name;
     this.id = id;
@@ -20,6 +23,7 @@ class Car {
     this.carSVG = this.createCar();
     this.changeColor(color);
     this.animation = undefined as unknown as Animation;
+    this.listener = undefined as unknown as EventListener;
   }
 
   private createCar() {
@@ -59,10 +63,12 @@ class Car {
     return this.carSVG;
   }
 
-  move(velocity: number) {
+  move(time: number) {
     this.animation = this.carSVG.animate([
       { left: '0' },
-      { left: 'calc(100% - 160px' }], { duration: velocity, fill: 'forwards' });
+      { left: 'calc(100% - 160px' }], { duration: time, fill: 'forwards' });
+    this.createEventListener(time);
+    this.animation.addEventListener('finish', this.listener, { once: true });
   }
 
   stop() {
@@ -77,8 +83,17 @@ class Car {
     }
   }
 
-  getId() {
-    return this.id;
+  createEventListener(time: number) {
+    this.listener = () => {
+      this.carSVG.dispatchEvent(MyCustomEvent('winner', {
+        id: this.id,
+        time,
+      }));
+    };
+  }
+
+  removeEventListener() {
+    this.animation.removeEventListener('finish', this.listener);
   }
 }
 

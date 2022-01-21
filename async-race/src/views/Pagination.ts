@@ -9,13 +9,16 @@ class Pagination {
 
   private readonly pageName: string;
 
+  private readonly pagination: HTMLElement;
+
   constructor(pageName: string) {
     this.pageName = pageName;
     this.prevButton = this.getPrevButton();
     this.nextButton = this.getNextButton();
+    this.pagination = this.create();
   }
 
-  render() {
+  create() {
     const pagination = createHTMLElement('div', 'nav pagination');
     pagination.append(this.prevButton, this.nextButton);
     return pagination;
@@ -57,6 +60,10 @@ class Pagination {
     if (!disable) {
       this.nextButton.classList.remove('disabled');
     }
+  }
+
+  render() {
+    return this.pagination;
   }
 }
 

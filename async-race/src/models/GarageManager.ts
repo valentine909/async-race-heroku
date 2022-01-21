@@ -7,6 +7,18 @@ class GarageManager extends APIManager {
     this.endpoint += 'garage';
   }
 
+  async getCar(customId: number): Promise<void | CarProperties> {
+    const endpointModifier = `?id=${customId}`;
+    let json;
+    try {
+      const res = await fetch(this.endpoint + endpointModifier, { method: 'GET' });
+      json = await res.json();
+    } catch (error) {
+      console.error(error);
+    }
+    return json[0] as CarProperties;
+  }
+
   getCars(page: number, limit = 7): Promise<void | AllCars> {
     const endpointModifier = `?_page=${page}&_limit=${limit}`;
     return fetch(this.endpoint + endpointModifier, { method: 'GET' })
