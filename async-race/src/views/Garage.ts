@@ -46,7 +46,7 @@ class Garage {
   getGarageControl() {
     const createContainer = Garage.getCreateBlock();
     const updateContainer = this.updateBlock;
-    const raceContainer = this.getRaceBlock();
+    const raceContainer = Garage.getRaceBlock();
     const wrapper = createHTMLElement('div', 'garage__control');
     wrapper.append(createContainer, updateContainer, raceContainer);
     return wrapper;
@@ -94,11 +94,17 @@ class Garage {
     return updateContainer;
   }
 
-  // eslint-disable-next-line class-methods-use-this
-  getRaceBlock() {
+  static getRaceBlock() {
     const raceContainer = createHTMLElement('div', 'race');
     const raceButton = createHTMLElement('button', 'race__race', 'race');
+    raceButton.addEventListener('click', () => {
+      raceButton.dispatchEvent(MyCustomEvent('start-race'));
+    });
+
     const resetButton = createHTMLElement('button', 'race__reset', 'reset');
+    resetButton.addEventListener('click', () => {
+      resetButton.dispatchEvent(MyCustomEvent('reset-cars'));
+    });
 
     const generateButton = createHTMLElement('button', 'race__generate', 'generate cars');
     generateButton.addEventListener('click', () => {
@@ -152,6 +158,10 @@ class Garage {
     }
   }
 
+  startCars() {
+    this.tracks.forEach((track) => track.getStartButton().dispatchEvent(new Event('click')));
+  }
+
   stopCar(id: number) {
     const car = this.findCar(id);
     if (car) {
@@ -164,6 +174,10 @@ class Garage {
     if (car) {
       car.reset();
     }
+  }
+
+  resetCars() {
+    this.tracks.forEach((track) => track.getStopButton().dispatchEvent(new Event('click')));
   }
 
   findCar(id: number) {

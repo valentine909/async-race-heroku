@@ -38,6 +38,8 @@ class GaragePresenter {
     this.paginationHandler();
     this.startEngineHandler();
     this.stopEngineHandler();
+    this.startRaceHandler();
+    this.resetCarsHandler();
   }
 
   async init() {
@@ -69,7 +71,6 @@ class GaragePresenter {
           this.updatePaginationButtonsStyle();
         }
       } else {
-        // eslint-disable-next-line no-alert
         alert('Car\'s name could not be empty!');
       }
     }) as unknown as EventListener);
@@ -83,7 +84,6 @@ class GaragePresenter {
           await this.updateView();
         }
       } else {
-        // eslint-disable-next-line no-alert
         alert('Car\'s name could not be empty!');
       }
     }) as unknown as EventListener);
@@ -177,6 +177,18 @@ class GaragePresenter {
         await this.raceModel.startOrStop(id, EngineStatus.stopped);
         this.view.resetCar(id);
       }
+    }) as unknown as EventListener);
+  }
+
+  startRaceHandler() {
+    document.addEventListener('start-race', (async () => {
+      this.view.startCars();
+    }) as unknown as EventListener);
+  }
+
+  resetCarsHandler() {
+    document.addEventListener('reset-cars', (async () => {
+      this.view.resetCars();
     }) as unknown as EventListener);
   }
 }
