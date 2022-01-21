@@ -1,0 +1,25 @@
+.modal {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 300px;
+  height: auto;
+  padding: 30px 20px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 20px;
+  border: 2px solid #666;
+  border-radius: 10px;
+  background-color: #888;
+  transform: translate(-50%, -50%);
+}
+
+.modal__text {
+  color: white;
+  font: inherit;
+  text-align: center;
+  line-height: 40px;
+  font-size: 24px;
+}
