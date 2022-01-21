@@ -66,11 +66,15 @@ class Car {
   }
 
   stop() {
-    this.animation.pause();
+    if (this.animation) {
+      this.animation.pause();
+    }
   }
 
   reset() {
-    this.animation.cancel();
+    if (this.animation) {
+      this.animation.cancel();
+    }
   }
 }
 
