@@ -23,7 +23,7 @@ class CarTrack {
     this.id = car.id as number;
     this.name = car.name;
     this.color = car.color;
-    this.car = new Car(this.color, this.name, this.id);
+    this.car = new Car(this.color, this.id);
     this.startEngineButton = createHTMLElement('button', 'start__button', 'A');
     this.stopEngineButton = createHTMLElement('button', 'stop__button disabled', 'B');
     this.track = this.createTrack();

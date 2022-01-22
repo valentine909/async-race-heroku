@@ -19,17 +19,16 @@ class Car {
   constructor(color: string, id: number) {
     this.id = id;
     this.color = color;
-    this.carSVG = this.createCar();
-    this.changeColor(color);
+    this.carSVG = Car.createCar(id, color);
     this.animation = undefined as unknown as Animation;
     this.listener = undefined as unknown as EventListener;
     this.isOnRace = false;
   }
 
-  private createCar() {
+  static createCar(id: number, color: string) {
     const svgAttributes = {
       class: 'carSVG',
-      id: this.id,
+      id,
       width: '1280.000000pt',
       height: '640.000000pt',
       viewBox: '0 0 1280.000000 540.000000',
@@ -50,13 +49,9 @@ class Car {
       p.setAttribute('d', pathString);
       g.append(p);
     });
+    (g.firstChild as SVGPathElement).setAttribute('fill', color);
     svg.append(g);
     return svg;
-  }
-
-  changeColor(color: string) {
-    const pathElement = this.carSVG.querySelector('path') as SVGPathElement;
-    pathElement.setAttribute('fill', color);
   }
 
   renderCar() {
