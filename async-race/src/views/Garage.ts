@@ -166,7 +166,10 @@ class Garage {
   }
 
   startCars() {
-    this.tracks.forEach((track) => track.getStartButton().dispatchEvent(new Event('click')));
+    this.tracks.forEach((track) => {
+      track.getStartButton().dispatchEvent(new Event('click'));
+      track.getCar().prepareToRace();
+    });
   }
 
   stopCar(id: number) {

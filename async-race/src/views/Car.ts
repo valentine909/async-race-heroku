@@ -8,22 +8,22 @@ class Car {
 
   readonly id: number;
 
-  private name: string;
-
   private color: string;
 
   private animation: Animation;
 
   private listener: EventListener;
 
-  constructor(color: string, name: string, id: number) {
-    this.name = name;
+  private isOnRace: boolean;
+
+  constructor(color: string, id: number) {
     this.id = id;
     this.color = color;
     this.carSVG = this.createCar();
     this.changeColor(color);
     this.animation = undefined as unknown as Animation;
     this.listener = undefined as unknown as EventListener;
+    this.isOnRace = false;
   }
 
   private createCar() {
@@ -67,8 +67,14 @@ class Car {
     this.animation = this.carSVG.animate([
       { left: '0' },
       { left: 'calc(100% - 160px' }], { duration: time, fill: 'forwards' });
-    this.createEventListener(time);
-    this.animation.addEventListener('finish', this.listener, { once: true });
+    if (this.isOnRace) {
+      this.addListener(time);
+      this.isOnRace = false;
+    }
+  }
+
+  prepareToRace() {
+    this.isOnRace = true;
   }
 
   stop() {
@@ -83,6 +89,11 @@ class Car {
     }
   }
 
+  addListener(time: number) {
+    this.createEventListener(time);
+    this.animation.addEventListener('finish', this.listener, { once: true });
+  }
+
   createEventListener(time: number) {
     this.listener = () => {
       this.carSVG.dispatchEvent(MyCustomEvent('winner', {
@@ -93,7 +104,9 @@ class Car {
   }
 
   removeEventListener() {
-    this.animation.removeEventListener('finish', this.listener);
+    if (this.listener) {
+      this.animation.removeEventListener('finish', this.listener);
+    }
   }
 }
 
