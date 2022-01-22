@@ -31,7 +31,7 @@ class Garage {
 
   constructor() {
     this.carsPerPage = 7;
-    this.garage = createHTMLElement('div', 'garage');
+    this.garage = createHTMLElement('section', 'garage');
     this.updateId = -1;
     this.updateBlock = this.getUpdateBlock();
     this.garageControl = this.getGarageControl();
