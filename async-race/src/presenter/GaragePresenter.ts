@@ -18,15 +18,15 @@ class GaragePresenter {
 
   private currentPage: number;
 
-  private carsPerPage: number;
+  private readonly carsPerPage: number;
 
   constructor(garageManager: GarageManager, raceManager: RaceManager, garage: Garage) {
     this.garageModel = garageManager;
     this.raceModel = raceManager;
     this.view = garage;
-    this.carsBatchSize = 100;
-    this.carsPerPage = 0;
 
+    this.carsBatchSize = 100;
+    this.carsPerPage = this.view.getCarsPerPage();
     this.currentGarageCarsCount = 4;
     this.currentPage = 1;
 
@@ -43,7 +43,6 @@ class GaragePresenter {
   }
 
   async init() {
-    this.carsPerPage = this.view.getCarsPerPage();
     await this.updateView();
     this.updatePaginationButtonsStyle();
   }
