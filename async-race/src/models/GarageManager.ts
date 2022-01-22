@@ -7,7 +7,7 @@ class GarageManager extends APIManager {
     this.endpoint += 'garage';
   }
 
-  async getCar(customId: number): Promise<void | CarProperties> {
+  async getCar(customId: number): Promise<CarProperties> {
     const endpointModifier = `?id=${customId}`;
     let json;
     try {
