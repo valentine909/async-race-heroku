@@ -1,9 +1,13 @@
 import WinnerManager from '../models/WinnerManager';
 import Winners from '../views/Winners';
 import Garage from '../views/Garage';
-import { Details, PageDetail, WinnerDetail } from './CustomEvents';
+import {
+  Details, PageDetail, SortDetail, WinnerDetail,
+} from './CustomEvents';
 import GarageManager from '../models/GarageManager';
-import { AllWinners, CarProperties } from '../types/types';
+import {
+  AllWinners, CarProperties, SortDirections, SortVariants,
+} from '../types/types';
 
 class WinnerPresenter {
   private readonly winnerModel: WinnerManager;
@@ -20,6 +24,10 @@ class WinnerPresenter {
 
   private currentWinnersCount: number;
 
+  private sortDirection: SortDirections;
+
+  private sortVariant: SortVariants;
+
   constructor(
     garageManager: GarageManager,
     winnerManager: WinnerManager,
@@ -33,9 +41,12 @@ class WinnerPresenter {
     this.currentWinnersCount = 1;
     this.currentPage = 1;
     this.winnersPerPage = this.winnersView.getWinnersPerPage();
+    this.sortVariant = SortVariants.id;
+    this.sortDirection = SortDirections.asc;
     this.detectWinnerHandler();
     this.removeWinnerHandler();
     this.paginationHandler();
+    this.sortHandler();
   }
 
   async init() {
@@ -46,6 +57,8 @@ class WinnerPresenter {
     const { totalWinners, winners } = await this.winnerModel.getWinners(
       this.currentPage,
       this.winnersPerPage,
+      this.sortVariant,
+      this.sortDirection,
     ) as AllWinners;
     this.winnersView.updatePageNumber(this.currentPage.toString());
     this.winnersView.updateWinnersNumber(totalWinners);
@@ -108,13 +121,11 @@ class WinnerPresenter {
       if (ev.detail.currentPage > 0
         && this.currentWinnersCount / this.winnersPerPage > this.currentPage) {
         this.currentPage += 1;
-        await this.updateWinnersView();
       }
       if (ev.detail.currentPage < 0 && this.currentPage > 1) {
         this.currentPage -= 1;
-        await this.updateWinnersView();
       }
-      this.updatePaginationButtonsStyle();
+      await this.updateWinnersView();
     }) as unknown as EventListener);
   }
 
@@ -129,6 +140,27 @@ class WinnerPresenter {
       this.winnersView.disableNextButton(false);
     } else {
       this.winnersView.disableNextButton(true);
+    }
+  }
+
+  sortHandler() {
+    document.addEventListener('sort', (async (ev: CustomEvent<SortDetail>) => {
+      if (ev.detail.variant === this.sortVariant) {
+        this.toggleSortDirection();
+        this.winnersView.toggleDescending(ev.detail.variant);
+      } else {
+        this.sortVariant = ev.detail.variant;
+        this.winnersView.changeSort(ev.detail.variant);
+      }
+      await this.updateWinnersView();
+    }) as unknown as EventListener);
+  }
+
+  toggleSortDirection() {
+    if (this.sortDirection === SortDirections.asc) {
+      this.sortDirection = SortDirections.desc;
+    } else {
+      this.sortDirection = SortDirections.asc;
     }
   }
 }

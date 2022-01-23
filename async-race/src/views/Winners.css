@@ -26,7 +26,7 @@ td {
   vertical-align: middle;
 }
 
-.header-ID, .header-Wins, .header-Best {
+.sortable {
   cursor: pointer;
   font-weight: bold;
   color: darkblue;
@@ -37,4 +37,12 @@ td {
   margin: 0 auto;
   width: 100px;
   height: 30px;
+}
+
+.active-sort::after {
+  content: " ▲";
+}
+
+.descending::after {
+  content: " ▼";
 }

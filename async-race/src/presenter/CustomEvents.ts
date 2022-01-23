@@ -1,3 +1,5 @@
+import { SortVariants } from '../types/types';
+
 export interface Details {
   name?: string;
   color?: string;
@@ -13,7 +15,11 @@ export interface WinnerDetail {
   time: number;
 }
 
-export type Detail = Details | PageDetail | WinnerDetail;
+export interface SortDetail {
+  variant: SortVariants;
+}
+
+export type Detail = Details | PageDetail | WinnerDetail | SortDetail;
 
 export function MyCustomEvent(name: string, details?: Detail): CustomEvent<Detail> {
   return new CustomEvent(name, {

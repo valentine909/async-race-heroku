@@ -51,3 +51,8 @@ export type Route = {
   path: string;
   content: HTMLElement;
 };
+
+export enum SortDirections {
+  asc = 'ASC',
+  desc = 'DESC',
+}

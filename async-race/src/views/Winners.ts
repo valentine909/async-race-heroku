@@ -1,8 +1,9 @@
 import { createHTMLElement } from '../util/createElements';
 import Pagination from './Pagination';
 import './Winners.css';
-import { CarProperties, WinnerProperties } from '../types/types';
+import { CarProperties, SortVariants, WinnerProperties } from '../types/types';
 import Car from './Car';
+import { MyCustomEvent } from '../presenter/CustomEvents';
 
 class Winners {
   private readonly winners: HTMLElement;
@@ -17,6 +18,8 @@ class Winners {
 
   private readonly winnersPerPage: number;
 
+  private readonly sortableHeaders: HTMLElement[];
+
   constructor() {
     this.winners = createHTMLElement('section', 'winners');
     this.pagination = new Pagination('winners');
@@ -24,6 +27,7 @@ class Winners {
     this.pageNumber = createHTMLElement('h3', 'winners__page-number', `Page #${1}`);
     this.winnersPerPage = 10;
     this.tbody = createHTMLElement('tbody', 'winners__table_body');
+    this.sortableHeaders = [];
     this.winners.append(
       this.winnersNumber,
       this.pageNumber,
@@ -34,16 +38,75 @@ class Winners {
 
   createTable() {
     const table = createHTMLElement('table', 'winners__table');
-    const headers = ['ID', 'Car', 'Name', 'Wins', 'Best Time'];
+    ['10%', '30%', '30%', '15%', '15%'].forEach((width) => {
+      const col = createHTMLElement('col');
+      col.setAttribute('width', width);
+      table.append(col);
+    });
+    const header = this.createTableHeader();
+    table.append(header, this.tbody);
+    return table;
+  }
+
+  createTableHeader() {
+    const headerProperties = {
+      id: { name: 'ID', sortable: true },
+      car: { name: 'Car', sortable: false },
+      name: { name: 'Name', sortable: false },
+      wins: { name: 'Wins', sortable: true },
+      time: { name: 'Best Time', sortable: true },
+    };
     const header = createHTMLElement('thead', 'winners__table_header');
     const row = createHTMLElement('tr');
-    headers.forEach((head) => {
-      const th = createHTMLElement('th', `header-${head.split(' ')[0]}`, head);
+    Object.entries(headerProperties).forEach(([key, value]) => {
+      let className = `header-${key}`;
+      if (value.sortable) {
+        className += ' sortable';
+      }
+      if (key === 'id') {
+        className += ' active-sort';
+      }
+      const th = createHTMLElement('th', className, value.name);
+      if (value.sortable) {
+        Winners.addSortListener(th, key as SortVariants);
+        this.sortableHeaders.push(th);
+      }
       row.append(th);
     });
     header.append(row);
-    table.append(header, this.tbody);
-    return table;
+    return header;
+  }
+
+  static addSortListener(element: HTMLElement, variant: SortVariants) {
+    element.addEventListener('click', () => {
+      element.dispatchEvent(MyCustomEvent('sort', {
+        variant,
+      }));
+    });
+  }
+
+  toggleDescending(name: SortVariants) {
+    this.sortableHeaders.forEach((element) => {
+      if (element.classList.contains(`header-${name}`)) {
+        element.classList.toggle('descending');
+      }
+    });
+  }
+
+  changeSort(name: SortVariants) {
+    this.sortableHeaders.forEach((element) => {
+      if (element.classList.contains('active-sort')) {
+        element.classList.remove('active-sort');
+      }
+      if (element.classList.contains('descending')) {
+        element.classList.remove('descending');
+      }
+    });
+    this.sortableHeaders.forEach((element) => {
+      if (element.classList.contains(`header-${name}`)) {
+        element.classList.add('active-sort');
+      }
+    });
   }
 
   updateTable(cars: CarProperties[], winners: WinnerProperties[]) {
