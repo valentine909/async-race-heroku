@@ -1,7 +1,7 @@
 import WinnerManager from '../models/WinnerManager';
 import Winners from '../views/Winners';
 import Garage from '../views/Garage';
-import { WinnerDetail } from './CustomEvents';
+import { Details, PageDetail, WinnerDetail } from './CustomEvents';
 import GarageManager from '../models/GarageManager';
 import { AllWinners, CarProperties } from '../types/types';
 
@@ -34,6 +34,8 @@ class WinnerPresenter {
     this.currentPage = 1;
     this.winnersPerPage = this.winnersView.getWinnersPerPage();
     this.detectWinnerHandler();
+    this.removeWinnerHandler();
+    this.paginationHandler();
   }
 
   async init() {
@@ -47,6 +49,7 @@ class WinnerPresenter {
     ) as AllWinners;
     this.winnersView.updatePageNumber(this.currentPage.toString());
     this.winnersView.updateWinnersNumber(totalWinners);
+    this.currentWinnersCount = Number(totalWinners);
     const cars: Promise<CarProperties>[] = [];
     (await winners).forEach((winner) => {
       cars.push(this.getCarProperty(winner.id));
@@ -56,6 +59,7 @@ class WinnerPresenter {
       .filter((r) => r.status === 'fulfilled') as PromiseFulfilledResult<CarProperties>[])
       .map((r) => r.value);
     this.winnersView.updateTable(carsData, await winners);
+    this.updatePaginationButtonsStyle();
   }
 
   async getCarProperty(id: number): Promise<CarProperties> {
@@ -86,7 +90,46 @@ class WinnerPresenter {
           time: carTime,
         });
       }
+      await this.updateWinnersView();
     }) as unknown as EventListener);
+  }
+
+  removeWinnerHandler() {
+    document.addEventListener('delete-car', (async (ev: CustomEvent<Details>) => {
+      if (ev.detail.id) {
+        await this.winnerModel.deleteWinner(ev.detail.id);
+        await this.updateWinnersView();
+      }
+    }) as unknown as EventListener);
+  }
+
+  paginationHandler() {
+    document.addEventListener('winners-pagination', (async (ev: CustomEvent<PageDetail>) => {
+      if (ev.detail.currentPage > 0
+        && this.currentWinnersCount / this.winnersPerPage > this.currentPage) {
+        this.currentPage += 1;
+        await this.updateWinnersView();
+      }
+      if (ev.detail.currentPage < 0 && this.currentPage > 1) {
+        this.currentPage -= 1;
+        await this.updateWinnersView();
+      }
+      this.updatePaginationButtonsStyle();
+    }) as unknown as EventListener);
+  }
+
+  updatePaginationButtonsStyle() {
+    if (this.currentPage === 1) {
+      this.winnersView.disablePrevButton(true);
+    } else {
+      this.winnersView.disablePrevButton(false);
+    }
+    const maxPage = Math.ceil(this.currentWinnersCount / this.winnersPerPage);
+    if (this.currentPage < maxPage) {
+      this.winnersView.disableNextButton(false);
+    } else {
+      this.winnersView.disableNextButton(true);
+    }
   }
 }
 

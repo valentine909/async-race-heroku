@@ -81,6 +81,14 @@ class Winners {
     this.pageNumber.innerHTML = `Page #${num}`;
   }
 
+  disablePrevButton(flag: boolean) {
+    this.pagination.disablePrev(flag);
+  }
+
+  disableNextButton(flag: boolean) {
+    this.pagination.disableNext(flag);
+  }
+
   render() {
     return this.winners;
   }
