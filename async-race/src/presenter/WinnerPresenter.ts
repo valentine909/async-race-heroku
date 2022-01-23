@@ -89,13 +89,12 @@ class WinnerPresenter {
       this.garageView.popupModal(`${car?.name} wins\n with time ${carTime} s`);
       const winner = await this.winnerModel.getWinner(carId);
       if (winner) {
-        if (winner.time > carTime) {
-          await this.winnerModel.updateWinner({
-            id: carId,
-            wins: winner.wins + 1,
-            time: carTime,
-          });
-        }
+        const time = winner.time > carTime ? carTime : winner.time;
+        await this.winnerModel.updateWinner({
+          id: carId,
+          wins: winner.wins + 1,
+          time,
+        });
       } else {
         await this.winnerModel.createWinner({
           id: carId,
