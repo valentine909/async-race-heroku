@@ -47,6 +47,7 @@ class WinnerPresenter {
     this.removeWinnerHandler();
     this.paginationHandler();
     this.sortHandler();
+    this.updateHandler();
   }
 
   async init() {
@@ -161,6 +162,12 @@ class WinnerPresenter {
     } else {
       this.sortDirection = SortDirections.asc;
     }
+  }
+
+  updateHandler() {
+    document.addEventListener('update-car', (async () => {
+      await this.updateWinnersView();
+    }) as unknown as EventListener);
   }
 }
 
