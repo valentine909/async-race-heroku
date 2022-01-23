@@ -44,7 +44,6 @@ class GaragePresenter {
 
   async init() {
     await this.updateView();
-    this.updatePaginationButtonsStyle();
   }
 
   async updateView() {
@@ -58,6 +57,7 @@ class GaragePresenter {
       this.currentPage.toString(),
       await cars,
     );
+    this.updatePaginationButtonsStyle();
   }
 
   createHandler() {
@@ -97,7 +97,6 @@ class GaragePresenter {
       await Promise.allSettled(promises);
       this.currentGarageCarsCount += 100;
       await this.updateView();
-      this.updatePaginationButtonsStyle();
     }));
   }
 
@@ -120,7 +119,6 @@ class GaragePresenter {
           this.currentPage -= 1;
         }
         await this.updateView();
-        this.updatePaginationButtonsStyle();
       }
     }) as unknown as EventListener);
   }
@@ -130,13 +128,11 @@ class GaragePresenter {
       if (ev.detail.currentPage > 0
         && this.currentGarageCarsCount / this.carsPerPage > this.currentPage) {
         this.currentPage += 1;
-        await this.updateView();
       }
       if (ev.detail.currentPage < 0 && this.currentPage > 1) {
         this.currentPage -= 1;
-        await this.updateView();
       }
-      this.updatePaginationButtonsStyle();
+      await this.updateView();
     }) as unknown as EventListener);
   }
 
