@@ -2,7 +2,7 @@ class APIManager {
   endpoint: string;
 
   constructor() {
-    this.endpoint = 'http://127.0.0.1:3000/';
+    this.endpoint = 'https://async-race-api-909.herokuapp.com/';
   }
 }
 
